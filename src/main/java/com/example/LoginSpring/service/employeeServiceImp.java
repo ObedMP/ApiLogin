@@ -5,16 +5,29 @@ import com.example.LoginSpring.entity.Employee;
 import com.example.LoginSpring.repository.employeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
 public class employeeServiceImp implements employeeService{
 
     @Autowired
-    private employeeRepository empployeeRepository;
+    private employeeRepository employeerepository;
+
+
+
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public String addEmployee(EmployeeDto employeeDto) {
-        Employee employee=new Employee();
+        Employee employee=new Employee(
         employeeDto.getEmployeeId(),
         employeeDto.getEmployeename(),
         employeeDto.getEmail(),
-        this
+        this.passwordEncoder.encode(employeeDto.getPass())
+        );
+
+        employeerepository.save(employee);
+        return employee.getEmployeename();
     }
 }
